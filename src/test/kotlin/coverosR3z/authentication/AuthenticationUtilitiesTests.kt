@@ -20,34 +20,63 @@ class AuthenticationUtilitiesTests {
         assertEquals("the result should clearly indicate an empty password", RegistrationResult.EMPTY_PASSWORD, result)
     }
 
+    /****************
+     * Length Cases *
+     ****************/
+
     /**
-     * At a certain point, a password can be too long.  We'll call it at 100
+     * At a certain point, a password can be too long.
      */
     @Test
-    fun `It should not be possible to create a password longer than 100 characters`() {
-        val password = "a".repeat(100)
-        assert(password.length == 100)
+    fun `It should not be possible to create a password longer than 255 characters`() {
+        val password = "a".repeat(256)
+        assert(password.length == 256)
+
         val result = authUtils.register("matt", password)
 
         assertEquals(RegistrationResult.PASSWORD_TOO_LONG, result)
     }
 
     @Test
-    fun `A 99-character password should succeed`() {
-        val password = "a".repeat(99)
-        assert(password.length == 99)
+    fun `A 255-character password should succeed`() {
+        val password = "a".repeat(255)
+        assert(password.length == 255)
+
+        val result = authUtils.register("matt", password)
+
+        assertEquals(RegistrationResult.SUCCESS, result)
+    }
+
+    /**
+     * At a certain point, a password can be too short. Under 12 is probably abysmal.
+     */
+    @Test
+    fun `A 11 character password should fail`() {
+        val password = "a".repeat(11)
+        assert(password.length == 11)
+
+        val result = authUtils.register("matt", password)
+
+        assertEquals(RegistrationResult.PASSWORD_TOO_SHORT, result)
+    }
+
+    @Test
+    fun `An 12 character password is a-ok`() {
+        val password = "a".repeat(12)
+        assert(password.length == 12)
+
         val result = authUtils.register("matt", password)
 
         assertEquals(RegistrationResult.SUCCESS, result)
     }
 
     @Test
-    fun `A 101-character password should fail`() {
-        val password = "a".repeat(101)
-        assert(password.length == 101)
+    fun `A password greater than 12 chars should pass`() {
+        val password = "a".repeat(13)
+
         val result = authUtils.register("matt", password)
 
-        assertEquals(RegistrationResult.PASSWORD_TOO_LONG, result)
+        assertEquals(RegistrationResult.SUCCESS, result)
     }
 
 }

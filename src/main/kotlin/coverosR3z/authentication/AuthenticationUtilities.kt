@@ -5,12 +5,20 @@ import coverosR3z.domainobjects.RegistrationResult
 
 class AuthenticationUtilities(ap : IAuthPersistence){
 
+    val blacklistedPasswords : List<String> = listOf<String>("password")
+
     fun register(username: String, password: String) : RegistrationResult {
         if (password.isEmpty()) {
             return RegistrationResult.EMPTY_PASSWORD
         }
-        if (password.length >= 100) {
+        if(password.length < 12) {
+            return RegistrationResult.PASSWORD_TOO_SHORT
+        }
+        if (password.length > 255) {
             return RegistrationResult.PASSWORD_TOO_LONG
+        }
+        if(blacklistedPasswords.contains(password)){
+            return RegistrationResult.BLACKLISTED_PASSWORD
         }
         return RegistrationResult.SUCCESS
 
