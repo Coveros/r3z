@@ -9,7 +9,11 @@ class AuthenticationUtilities(ap : IAuthPersistence){
         if (password.isEmpty()) {
             return RegistrationResult.EMPTY_PASSWORD
         }
+        if (password.length >= 100) {
+            return RegistrationResult.PASSWORD_TOO_LONG
+        }
         return RegistrationResult.SUCCESS
+
     }
 
 }
