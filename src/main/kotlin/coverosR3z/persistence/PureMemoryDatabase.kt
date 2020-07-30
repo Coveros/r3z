@@ -85,7 +85,7 @@ class PureMemoryDatabase {
         return users.toList()
     }
 
-    fun getAllProjects(): List<Project>? {
+    fun getAllProjects(): List<Project> {
         return projects.toList()
     }
 
