@@ -1,8 +1,6 @@
 package coverosR3z.domainobjects
 
-import coverosR3z.exceptions.MalformedDataDuringSerializationException
 import kotlinx.serialization.Serializable
-import java.lang.Integer.parseInt
 
 private const val maxEmployeeCount = 100_000_000
 private const val maxEmployeeMsg = "No way this company has more than 100 million employees"
@@ -27,26 +25,6 @@ data class User(val id: Int, val name: String) {
         assert(name.isNotEmpty()) {nameCannotBeEmptyMsg}
         assert(id < maxEmployeeCount) { maxEmployeeMsg }
         assert(id > 0) { minIdMsg }
-    }
-
-    fun serialize(): String {
-        return "{id=$id,name=$name}"
-    }
-
-    companion object {
-        private val deserializationRegex = "\\{id=(.*),name=(.*)}".toRegex()
-
-        fun deserialize(value : String) : User? {
-            try {
-                val matches = deserializationRegex.matchEntire(value) ?: throw Exception()
-                val (idString, name) = matches.destructured
-                val id = parseInt(idString)
-                return User(id, name)
-            } catch (ex : Exception) {
-                throw MalformedDataDuringSerializationException("was unable to deserialize this: ( $value )")
-            }
-
-        }
     }
 
 }
