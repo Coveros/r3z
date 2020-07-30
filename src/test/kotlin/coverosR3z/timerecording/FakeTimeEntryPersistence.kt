@@ -1,4 +1,4 @@
-package coverosR3z.persistence
+package coverosR3z.timerecording
 
 import coverosR3z.DEFAULT_PROJECT
 import coverosR3z.DEFAULT_USER
