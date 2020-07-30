@@ -1,16 +1,16 @@
 package coverosR3z.authentication
 
 class FakeAuthPersistence(
-        val createExecutorBehavior : () -> Unit = {},
-        val isUserRegisteredBehavior : () -> Unit = {}
+        var createExecutorBehavior : () -> Unit = {},
+        var isUserRegisteredBehavior : () -> Boolean = {false}
 ) : IAuthPersistence {
 
     override fun createExecutor(name: String) {
         createExecutorBehavior()
     }
 
-    override fun isUserRegistered(name: String) {
-        isUserRegisteredBehavior()
+    override fun isUserRegistered(name: String) : Boolean {
+        return isUserRegisteredBehavior()
     }
 
 

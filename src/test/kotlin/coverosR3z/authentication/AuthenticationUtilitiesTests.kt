@@ -7,10 +7,12 @@ import org.junit.Test
 
 class AuthenticationUtilitiesTests {
     lateinit var authUtils : AuthenticationUtilities
+    lateinit var ap : FakeAuthPersistence
 
     @Before
     fun init() {
-        authUtils = AuthenticationUtilities(FakeAuthPersistence())
+        ap = FakeAuthPersistence()
+        authUtils = AuthenticationUtilities(ap)
     }
 
     @Test
@@ -77,6 +79,15 @@ class AuthenticationUtilitiesTests {
         val result = authUtils.register("matt", password)
 
         assertEquals(RegistrationResult.SUCCESS, result)
+    }
+
+    @Test
+    fun `An account should not be created if the user already exists`() {
+        ap.isUserRegisteredBehavior = {true}
+
+        val result = authUtils.register("matt", "just don't care")
+
+        assertEquals(RegistrationResult.ALREADY_REGISTERED, result)
     }
 
 }

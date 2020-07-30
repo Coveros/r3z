@@ -7,9 +7,9 @@ import coverosR3z.timerecording.ITimeEntryPersistence
 
 
 class FakeTimeEntryPersistence(
-        val minutesRecorded : Int = 0,
-        val persistNewTimeEntryBehavior : () -> Unit = {},
-        val persistNewProjectBehavior : () -> Project = { DEFAULT_PROJECT }) : ITimeEntryPersistence {
+        var minutesRecorded : Int = 0,
+        var persistNewTimeEntryBehavior : () -> Unit = {},
+        var persistNewProjectBehavior : () -> Project = { DEFAULT_PROJECT }) : ITimeEntryPersistence {
 
 
     override fun persistNewTimeEntry(entry: TimeEntryPreDatabase) {

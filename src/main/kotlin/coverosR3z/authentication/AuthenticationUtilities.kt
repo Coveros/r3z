@@ -3,7 +3,7 @@ package coverosR3z.authentication
 import coverosR3z.domainobjects.RegistrationResult
 
 
-class AuthenticationUtilities(ap : IAuthPersistence){
+class AuthenticationUtilities(val ap : IAuthPersistence){
 
     val blacklistedPasswords : List<String> = listOf<String>("password")
 
@@ -19,6 +19,9 @@ class AuthenticationUtilities(ap : IAuthPersistence){
         }
         if(blacklistedPasswords.contains(password)){
             return RegistrationResult.BLACKLISTED_PASSWORD
+        }
+        if(ap.isUserRegistered(username)){
+            return RegistrationResult.ALREADY_REGISTERED
         }
         return RegistrationResult.SUCCESS
 
