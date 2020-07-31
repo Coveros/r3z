@@ -8,10 +8,13 @@ class AuthenticationPersistenceTests {
 
     @Test
     fun `Should fail to find an unregistered user`() {
-        val ap = AuthenticationPersistence(PureMemoryDatabase())
+        val ap : IAuthPersistence = AuthenticationPersistence(PureMemoryDatabase())
 
         val result = ap.isUserRegistered("mitch")
 
         assertEquals("we haven't registered anyone yet, so mitch shouldn't be registered", false, result)
     }
+
+    // Should be able to register a user and confirm their registration
+
 }
