@@ -7,7 +7,7 @@ class AuthenticationUtilities(val ap : IAuthPersistence){
 
     val blacklistedPasswords : List<String> = listOf<String>("password")
 
-    fun register(employeename: String, password: String) : RegistrationResult {
+    fun register(username: String, password: String) : RegistrationResult {
         if (password.isEmpty()) {
             return RegistrationResult.EMPTY_PASSWORD
         }
@@ -20,7 +20,7 @@ class AuthenticationUtilities(val ap : IAuthPersistence){
         if(blacklistedPasswords.contains(password)){
             return RegistrationResult.BLACKLISTED_PASSWORD
         }
-        if(ap.isEmployeeRegistered(employeename)){
+        if(ap.isUserRegistered(username)){
             return RegistrationResult.ALREADY_REGISTERED
         }
         return RegistrationResult.SUCCESS

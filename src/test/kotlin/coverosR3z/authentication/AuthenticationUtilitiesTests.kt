@@ -16,7 +16,7 @@ class AuthenticationUtilitiesTests {
     }
 
     @Test
-    fun `It should not be possible to register a new employee with an empty password`() {
+    fun `It should not be possible to register a new user with an empty password`() {
         val result = authUtils.register("matt", "")
 
         assertEquals("the result should clearly indicate an empty password", RegistrationResult.EMPTY_PASSWORD, result)
@@ -82,8 +82,8 @@ class AuthenticationUtilitiesTests {
     }
 
     @Test
-    fun `An account should not be created if the employee already exists`() {
-        ap.isEmployeeRegisteredBehavior = {true}
+    fun `An account should not be created if the user already exists`() {
+        ap.isUserRegisteredBehavior = {true}
 
         val result = authUtils.register("matt", "just don't care")
 

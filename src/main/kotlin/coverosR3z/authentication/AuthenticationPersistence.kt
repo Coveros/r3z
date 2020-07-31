@@ -9,10 +9,8 @@ class AuthenticationPersistence(val pmd : PureMemoryDatabase) : IAuthPersistence
         TODO("Not yet implemented")
     }
 
-    override fun isEmployeeRegistered(name: String): Boolean {
-        val employees : List<Employee> = pmd.getAllEmployees()
-
-        return employees.any { u -> u.name == name }
+    override fun isUserRegistered(name: String): Boolean {
+        TODO("NEED TO IMPLEMENT ME")
     }
 
 }

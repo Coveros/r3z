@@ -2,15 +2,15 @@ package coverosR3z.authentication
 
 class FakeAuthPersistence(
         var createUserBehavior : () -> Unit = {},
-        var isEmployeeRegisteredBehavior : () -> Boolean = {false}
+        var isUserRegisteredBehavior : () -> Boolean = {false}
 ) : IAuthPersistence {
 
     override fun createUser(name: String) {
         createUserBehavior()
     }
 
-    override fun isEmployeeRegistered(name: String) : Boolean {
-        return isEmployeeRegisteredBehavior()
+    override fun isUserRegistered(name: String) : Boolean {
+        return isUserRegisteredBehavior()
     }
 
 

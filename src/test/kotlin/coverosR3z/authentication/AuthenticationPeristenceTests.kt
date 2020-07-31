@@ -10,7 +10,7 @@ class AuthenticationPeristenceTests {
     fun `should be possible to see if a user is registered`() {
         val ap = AuthenticationPersistence(PureMemoryDatabase())
 
-        val result = ap.isEmployeeRegistered("mitch")
+        val result = ap.isUserRegistered("mitch")
 
         assertEquals("we haven't registered anyone yet, so mitch shouldn't be registered", false, result)
     }
