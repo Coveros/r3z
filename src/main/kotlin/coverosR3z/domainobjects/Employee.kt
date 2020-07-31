@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 private const val maxEmployeeCount = 100_000_000
 private const val maxEmployeeMsg = "No way this company has more than 100 million employees"
 private const val minIdMsg = "Valid identifier values are 1 or above"
-private const val nameCannotBeEmptyMsg = "All users must have a non-empty name"
+private const val nameCannotBeEmptyMsg = "All employees must have a non-empty name"
 
 
 /**
- * Holds a user's name before we have a whole object, like [Employee]
+ * Holds a employee's name before we have a whole object, like [Employee]
  */
 @Serializable
 data class EmployeeName(val value: String) {

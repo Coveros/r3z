@@ -1,7 +1,7 @@
 package coverosR3z.persistence
 
 import coverosR3z.domainobjects.*
-import coverosR3z.exceptions.UserNotRegisteredException
+import coverosR3z.exceptions.EmployeeNotRegisteredException
 import kotlinx.serialization.Serializable
 
 /**
@@ -18,13 +18,13 @@ class PureMemoryDatabase {
     private val timeEntries : MutableMap<Employee, MutableSet<TimeEntry>> = mutableMapOf()
 
     fun addTimeEntry(timeEntry : TimeEntryPreDatabase) {
-        var userTimeEntries = timeEntries[timeEntry.employee]
-        if (userTimeEntries == null) {
-            userTimeEntries = mutableSetOf()
-            timeEntries[timeEntry.employee] = userTimeEntries
+        var employeeTimeEntries = timeEntries[timeEntry.employee]
+        if (employeeTimeEntries == null) {
+            employeeTimeEntries = mutableSetOf()
+            timeEntries[timeEntry.employee] = employeeTimeEntries
         }
-        val newIndex = userTimeEntries.size + 1
-        userTimeEntries.add(TimeEntry(
+        val newIndex = employeeTimeEntries.size + 1
+        employeeTimeEntries.add(TimeEntry(
                 newIndex,
                 timeEntry.employee,
                 timeEntry.project,
@@ -39,9 +39,9 @@ class PureMemoryDatabase {
         return newIndex
     }
 
-    fun addNewUser(username: EmployeeName) : Int {
+    fun addNewEmployee(employeename: EmployeeName) : Int {
         val newIndex = employees.size + 1
-        employees.add(Employee(newIndex, username.value))
+        employees.add(Employee(newIndex, employeename.value))
         return newIndex
     }
 
@@ -49,25 +49,25 @@ class PureMemoryDatabase {
      * gets the number of minutes a particular [Employee] has worked
      * on a certain date.
      *
-     * @throws [UserNotRegisteredException] if the user isn't known.
+     * @throws [EmployeeNotRegisteredException] if the employee isn't known.
      */
     fun getMinutesRecordedOnDate(employee: Employee, date: Date): Int {
-        val userTimeEntries = timeEntries[employee]
+        val employeeTimeEntries = timeEntries[employee]
                 ?: if (!employees.contains(employee)) {
-                    throw UserNotRegisteredException()
+                    throw EmployeeNotRegisteredException()
                 } else {
                     return 0
                 }
-        return userTimeEntries
+        return employeeTimeEntries
                 .filter { te -> te.employee.id == employee.id && te.date == date }
                 .sumBy { te -> te.time.numberOfMinutes }
     }
 
-    fun getAllTimeEntriesForUser(employee: Employee): List<TimeEntry> {
+    fun getAllTimeEntriesForEmployee(employee: Employee): List<TimeEntry> {
         return timeEntries[employee]!!.filter{ te -> te.employee.id == employee.id}
     }
 
-    fun getAllTimeEntriesForUserOnDate(employee: Employee, date: Date): List<TimeEntry> {
+    fun getAllTimeEntriesForEmployeeOnDate(employee: Employee, date: Date): List<TimeEntry> {
         return timeEntries[employee]!!.filter{ te -> te.employee.id == employee.id && te.date == date}
     }
 
@@ -76,12 +76,12 @@ class PureMemoryDatabase {
         return projects.singleOrNull { p -> p.id == id }
     }
 
-    fun getUserById(id: Int): Employee? {
+    fun getEmployeeById(id: Int): Employee? {
         assert(id > 0)
         return employees.singleOrNull { u -> u.id == id}
     }
 
-    fun getAllUsers() : List<Employee> {
+    fun getAllEmployees() : List<Employee> {
         return employees.toList()
     }
 

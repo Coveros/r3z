@@ -98,20 +98,20 @@ class TimeRecordingTests {
     }
 
     @Test
-    fun `a user should have a unique integer identifier`() {
-        val user = Employee(1, "someone")
-        assertEquals(1, user.id)
+    fun `a employee should have a unique integer identifier`() {
+        val employee = Employee(1, "someone")
+        assertEquals(1, employee.id)
     }
 
     @Test
-    fun `a user should have a name`() {
+    fun `a employee should have a name`() {
         val name = "this is my name bro"
         val id = 1
 
-        val user = Employee(id, name)
+        val employee = Employee(id, name)
 
-        assertEquals(id, user.id)
-        assertEquals(name, user.name)
+        assertEquals(id, employee.id)
+        assertEquals(name, employee.name)
     }
 
     @Test

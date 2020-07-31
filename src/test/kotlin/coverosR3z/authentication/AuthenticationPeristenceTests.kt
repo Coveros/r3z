@@ -10,7 +10,7 @@ class AuthenticationPeristenceTests {
     fun `should be possible to see if a executor is registered`() {
         val ap = AuthenticationPersistence(PureMemoryDatabase())
 
-        val result = ap.isUserRegistered("mitch")
+        val result = ap.isEmployeeRegistered("mitch")
 
         assertEquals("we haven't registered anyone yet, so mitch shouldn't be registered", false, result)
     }

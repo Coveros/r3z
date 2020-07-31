@@ -11,7 +11,7 @@ import org.junit.Test
 /**
  * Feature: Entering time
  *
- * User story:
+ * Employee story:
  *      As an employee
  *      I want to record my time
  *      So that I am easily able to document my time in an organized way
@@ -36,7 +36,7 @@ class EnteringTimeBDD {
      * Just another flavor of happy path
      */
     @Test
-    fun `A user enters six hours on a project with copious notes`() {
+    fun `A employee enters six hours on a project with copious notes`() {
         val (tru, entry, expectedStatus) = `given I have worked 6 hours on project "A" on Monday with a lot of notes`()
 
         // when I enter in that time
@@ -47,8 +47,8 @@ class EnteringTimeBDD {
     }
 
     @Test
-    fun `A user has already entered 24 hours for the day, they cannot enter more time on a new entry`() {
-        val (tru, newProject: Project, newEmployee: Employee) = `given the user has already entered 24 hours of time entries before`()
+    fun `A employee has already entered 24 hours for the day, they cannot enter more time on a new entry`() {
+        val (tru, newProject: Project, newEmployee: Employee) = `given the employee has already entered 24 hours of time entries before`()
 
         // when they enter in a new time entry for one hour
         val entry = createTimeEntryPreDatabase(time = Time(30), project = newProject, employee = newEmployee)
@@ -63,7 +63,7 @@ class EnteringTimeBDD {
         val startAfterDatabase = System.currentTimeMillis()
         val tru = createTimeRecordingUtility()
         val newProject : Project = tru.createProject(DEFAULT_PROJECT_NAME)
-        val newEmployee : Employee = tru.createUser(DEFAULT_EMPLOYEENAME)
+        val newEmployee : Employee = tru.createEmployee(DEFAULT_EMPLOYEENAME)
 
         // when I enter in that time
         val numberOfSamples = 10
@@ -99,7 +99,7 @@ class EnteringTimeBDD {
         val expectedStatus = RecordTimeResult(null, StatusEnum.SUCCESS)
         val tru = createTimeRecordingUtility()
         val newProject: Project = tru.createProject(ProjectName("A"))
-        val newEmployee: Employee = tru.createUser(EmployeeName("B"))
+        val newEmployee: Employee = tru.createEmployee(EmployeeName("B"))
         val entry = createTimeEntryPreDatabase(project = newProject, employee = newEmployee)
         return Triple(expectedStatus, tru, entry)
     }
@@ -107,7 +107,7 @@ class EnteringTimeBDD {
     private fun `given I have worked 6 hours on project "A" on Monday with a lot of notes`(): Triple<TimeRecordingUtilities, TimeEntryPreDatabase, RecordTimeResult> {
         val tru = createTimeRecordingUtility()
         val newProject: Project = tru.createProject(DEFAULT_PROJECT_NAME)
-        val newEmployee : Employee = tru.createUser(DEFAULT_EMPLOYEENAME)
+        val newEmployee : Employee = tru.createEmployee(DEFAULT_EMPLOYEENAME)
         val entry = createTimeEntryPreDatabase(
                 employee = newEmployee,
                 project = newProject,
@@ -118,10 +118,10 @@ class EnteringTimeBDD {
         return Triple(tru, entry, expectedStatus)
     }
 
-    private fun `given the user has already entered 24 hours of time entries before`(): Triple<TimeRecordingUtilities, Project, Employee> {
+    private fun `given the employee has already entered 24 hours of time entries before`(): Triple<TimeRecordingUtilities, Project, Employee> {
         val tru = createTimeRecordingUtility()
         val newProject: Project = tru.createProject(ProjectName("A"))
-        val newEmployee: Employee = tru.createUser(EmployeeName("B"))
+        val newEmployee: Employee = tru.createEmployee(EmployeeName("B"))
         val existingTimeForTheDay = createTimeEntryPreDatabase(employee = newEmployee, project = newProject, time = Time(60 * 24))
         tru.recordTime(existingTimeForTheDay)
         return Triple(tru, newProject, newEmployee)

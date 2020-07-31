@@ -19,7 +19,7 @@ class FakeTimeEntryPersistence(
         return persistNewProjectBehavior()
     }
 
-    override fun persistNewUser(username: EmployeeName): Employee {
+    override fun persistNewEmployee(employeename: EmployeeName): Employee {
         return DEFAULT_EMPLOYEE
     }
 

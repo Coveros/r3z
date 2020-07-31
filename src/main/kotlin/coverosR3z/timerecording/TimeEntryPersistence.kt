@@ -4,7 +4,7 @@ import coverosR3z.domainobjects.*
 import coverosR3z.logging.logInfo
 import coverosR3z.persistence.ProjectIntegrityViolationException
 import coverosR3z.persistence.PureMemoryDatabase
-import coverosR3z.persistence.UserIntegrityViolationException
+import coverosR3z.persistence.EmployeeIntegrityViolationException
 
 class TimeEntryPersistence(val pmd : PureMemoryDatabase) : ITimeEntryPersistence {
 
@@ -15,12 +15,12 @@ class TimeEntryPersistence(val pmd : PureMemoryDatabase) : ITimeEntryPersistence
     }
 
     /**
-     * This will throw an exception if the project or user in
-     * this timeentry don't exist in the list of projects / users
+     * This will throw an exception if the project or employee in
+     * this timeentry don't exist in the list of projects / employees
      */
     private fun isEntryValid(entry: TimeEntryPreDatabase) {
         pmd.getProjectById(entry.project.id) ?: throw ProjectIntegrityViolationException()
-        pmd.getUserById(entry.employee.id) ?: throw UserIntegrityViolationException()
+        pmd.getEmployeeById(entry.employee.id) ?: throw EmployeeIntegrityViolationException()
     }
 
     override fun persistNewProject(projectName: ProjectName): Project {
@@ -30,13 +30,13 @@ class TimeEntryPersistence(val pmd : PureMemoryDatabase) : ITimeEntryPersistence
         return Project(newId, projectName.value)
     }
 
-    override fun persistNewUser(username: EmployeeName): Employee {
-        logInfo("Recording a new user, ${username.value}, to the database")
+    override fun persistNewEmployee(employeename: EmployeeName): Employee {
+        logInfo("Recording a new employee, ${employeename.value}, to the database")
 
-        val newId = pmd.addNewUser(username)
+        val newId = pmd.addNewEmployee(employeename)
 
-        assert(newId > 0) {"A valid user will receive a positive id"}
-        return Employee(newId, username.value)
+        assert(newId > 0) {"A valid employee will receive a positive id"}
+        return Employee(newId, employeename.value)
     }
 
     override fun queryMinutesRecorded(employee: Employee, date: Date): Int {
@@ -45,11 +45,11 @@ class TimeEntryPersistence(val pmd : PureMemoryDatabase) : ITimeEntryPersistence
     }
 
     override fun readTimeEntries(employee: Employee): List<TimeEntry> {
-        return pmd.getAllTimeEntriesForUser(employee)
+        return pmd.getAllTimeEntriesForEmployee(employee)
     }
 
     override fun readTimeEntriesOnDate(employee: Employee, date: Date): List<TimeEntry> {
-        return pmd.getAllTimeEntriesForUserOnDate(employee, date)
+        return pmd.getAllTimeEntriesForEmployeeOnDate(employee, date)
     }
 
 }
