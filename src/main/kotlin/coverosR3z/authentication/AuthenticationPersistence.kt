@@ -10,7 +10,7 @@ class AuthenticationPersistence(val pmd : PureMemoryDatabase) : IAuthPersistence
     }
 
     override fun isUserRegistered(name: String): Boolean {
-        TODO("NEED TO IMPLEMENT ME")
+        return pmd.getUserByName(name) != null
     }
 
 }

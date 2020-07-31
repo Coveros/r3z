@@ -4,10 +4,10 @@ import coverosR3z.persistence.PureMemoryDatabase
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class AuthenticationPeristenceTests {
+class AuthenticationPersistenceTests {
 
     @Test
-    fun `should be possible to see if a user is registered`() {
+    fun `Should fail to find an unregistered user`() {
         val ap = AuthenticationPersistence(PureMemoryDatabase())
 
         val result = ap.isUserRegistered("mitch")

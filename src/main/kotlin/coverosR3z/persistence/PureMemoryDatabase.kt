@@ -14,6 +14,7 @@ import kotlinx.serialization.Serializable
 class PureMemoryDatabase {
 
     private val employees : MutableSet<Employee> = mutableSetOf()
+    private val users : MutableSet<User> = mutableSetOf()
     private val projects : MutableSet<Project> = mutableSetOf()
     private val timeEntries : MutableMap<Employee, MutableSet<TimeEntry>> = mutableMapOf()
 
@@ -69,6 +70,11 @@ class PureMemoryDatabase {
 
     fun getAllTimeEntriesForEmployeeOnDate(employee: Employee, date: Date): List<TimeEntry> {
         return timeEntries[employee]!!.filter{ te -> te.employee.id == employee.id && te.date == date}
+    }
+
+    fun getUserByName(name: String) : User? {
+        assert(name.isNotEmpty())
+        return users.singleOrNull { u -> u.name == name }
     }
 
     fun getProjectById(id: Int) : Project? {
