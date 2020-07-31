@@ -30,12 +30,12 @@ class TimeRecordingUtilities(private val persistence: ITimeEntryPersistence) {
         // make sure the user has a total (new plus existing) of less than 24 hours
         var minutesRecorded : Int
         try {
-            minutesRecorded = persistence.queryMinutesRecorded(entry.user, entry.date)
+            minutesRecorded = persistence.queryMinutesRecorded(entry.employee, entry.date)
         } catch (ex : UserNotRegisteredException) {
             // if we hit here, it means the user doesn't exist yet.  For these purposes, that is
             // fine, we are just checking here that if a user *does* exist, they don't have too many minutes.
             // if they don't exist, just move on through.
-            logInfo("user ${entry.user} was not registered in the database.  returning 0 minutes recorded.")
+            logInfo("user ${entry.employee} was not registered in the database.  returning 0 minutes recorded.")
             minutesRecorded = 0
         }
 
@@ -65,18 +65,18 @@ class TimeRecordingUtilities(private val persistence: ITimeEntryPersistence) {
      * Business code for creating a new user in the
      * system (persists it to the database)
      */
-    fun createUser(username: UserName) : User {
+    fun createUser(username: EmployeeName) : Employee {
         assert(username.value.isNotEmpty()) {"User name cannot be empty"}
         logInfo("Creating a new user, ${username.value}")
 
         return persistence.persistNewUser(username)
     }
 
-    fun getEntriesForUserOnDate(user: User, date: Date): List<TimeEntry> {
-        return persistence.readTimeEntriesOnDate(user, date)
+    fun getEntriesForUserOnDate(employee: Employee, date: Date): List<TimeEntry> {
+        return persistence.readTimeEntriesOnDate(employee, date)
     }
 
-    fun getAllEntriesForUser(user: User): List<TimeEntry> {
-        return persistence.readTimeEntries(user)
+    fun getAllEntriesForUser(employee: Employee): List<TimeEntry> {
+        return persistence.readTimeEntries(employee)
     }
 }

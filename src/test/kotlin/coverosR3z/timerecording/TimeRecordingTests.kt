@@ -91,7 +91,7 @@ class TimeRecordingTests {
     @Test
     fun `make time entry`() {
         val timeEntry = createTimeEntryPreDatabase(date = A_RANDOM_DAY_IN_JUNE_2020)
-        assertEquals(User(1, "I"), timeEntry.user)
+        assertEquals(Employee(1, "I"), timeEntry.employee)
         assertEquals(Time(60), timeEntry.time)
         assertEquals(Project(1, "A"), timeEntry.project)
         assertEquals(Details(), timeEntry.details)
@@ -99,7 +99,7 @@ class TimeRecordingTests {
 
     @Test
     fun `a user should have a unique integer identifier`() {
-        val user = User(1, "someone")
+        val user = Employee(1, "someone")
         assertEquals(1, user.id)
     }
 
@@ -108,7 +108,7 @@ class TimeRecordingTests {
         val name = "this is my name bro"
         val id = 1
 
-        val user = User(id, name)
+        val user = Employee(id, name)
 
         assertEquals(id, user.id)
         assertEquals(name, user.name)

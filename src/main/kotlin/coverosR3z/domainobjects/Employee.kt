@@ -9,17 +9,17 @@ private const val nameCannotBeEmptyMsg = "All users must have a non-empty name"
 
 
 /**
- * Holds a user's name before we have a whole object, like [User]
+ * Holds a user's name before we have a whole object, like [Employee]
  */
 @Serializable
-data class UserName(val value: String) {
+data class EmployeeName(val value: String) {
     init {
         assert(value.isNotEmpty()) {nameCannotBeEmptyMsg}
     }
 }
 
 @Serializable
-data class User(val id: Int, val name: String) {
+data class Employee(val id: Int, val name: String) {
 
     init {
         assert(name.isNotEmpty()) {nameCannotBeEmptyMsg}
@@ -27,14 +27,6 @@ data class User(val id: Int, val name: String) {
         assert(id > 0) { minIdMsg }
     }
 
-}
-
-@Serializable
-data class UserId(val id: Int) {
-    init {
-        assert(id < maxEmployeeCount) {maxEmployeeMsg }
-        assert(id > 0) { minIdMsg }
-    }
 }
 
 

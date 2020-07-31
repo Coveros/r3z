@@ -6,7 +6,6 @@ import coverosR3z.logging.logInfo
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
@@ -30,21 +29,21 @@ class PureMemoryDatabaseTests {
 
     @Test
     fun `should be able to add a new user`() {
-        pmd.addNewUser(DEFAULT_USERNAME)
+        pmd.addNewUser(DEFAULT_EMPLOYEENAME)
 
-        val user = pmd.getUserById(DEFAULT_USER.id)
+        val user = pmd.getUserById(DEFAULT_EMPLOYEE.id)
 
         assertEquals(1, user!!.id)
     }
 
     @Test
     fun `should be able to add a new time entry`() {
-        pmd.addTimeEntry(TimeEntryPreDatabase(DEFAULT_USER, DEFAULT_PROJECT, DEFAULT_TIME, A_RANDOM_DAY_IN_JUNE_2020))
+        pmd.addTimeEntry(TimeEntryPreDatabase(DEFAULT_EMPLOYEE, DEFAULT_PROJECT, DEFAULT_TIME, A_RANDOM_DAY_IN_JUNE_2020))
 
-        val timeEntries = pmd.getAllTimeEntriesForUser(DEFAULT_USER)[0]
+        val timeEntries = pmd.getAllTimeEntriesForUser(DEFAULT_EMPLOYEE)[0]
 
         assertEquals(1, timeEntries.id)
-        assertEquals(DEFAULT_USER, timeEntries.user)
+        assertEquals(DEFAULT_EMPLOYEE, timeEntries.employee)
         assertEquals(DEFAULT_PROJECT, timeEntries.project)
         assertEquals(DEFAULT_TIME, timeEntries.time)
         assertEquals(A_RANDOM_DAY_IN_JUNE_2020, timeEntries.date)
@@ -68,9 +67,9 @@ class PureMemoryDatabaseTests {
 
     @Test
     fun `should be able to get the minutes on a certain date`() {
-        pmd.addTimeEntry(TimeEntryPreDatabase(DEFAULT_USER, DEFAULT_PROJECT, DEFAULT_TIME, A_RANDOM_DAY_IN_JUNE_2020))
+        pmd.addTimeEntry(TimeEntryPreDatabase(DEFAULT_EMPLOYEE, DEFAULT_PROJECT, DEFAULT_TIME, A_RANDOM_DAY_IN_JUNE_2020))
 
-        val minutes = pmd.getMinutesRecordedOnDate(DEFAULT_USER, A_RANDOM_DAY_IN_JUNE_2020)
+        val minutes = pmd.getMinutesRecordedOnDate(DEFAULT_EMPLOYEE, A_RANDOM_DAY_IN_JUNE_2020)
 
         assertEquals(DEFAULT_TIME.numberOfMinutes, minutes)
     }
@@ -140,37 +139,37 @@ class PureMemoryDatabaseTests {
         assertTrue(totalTime < 100)
     }
 
-    private fun recordManyTimeEntries(numberOfUsers: Int, numberOfProjects: Int, numberOfDays: Int) : List<User> {
+    private fun recordManyTimeEntries(numberOfUsers: Int, numberOfProjects: Int, numberOfDays: Int) : List<Employee> {
         val lotsOfUsers: List<String> = generateUserNames()
         persistUsersToDatabase(numberOfUsers, lotsOfUsers)
-        val allUsers: List<User> = readUsersFromDatabase()
+        val allEmployees: List<Employee> = readUsersFromDatabase()
         persistProjectsToDatabase(numberOfProjects)
         val allProjects: List<Project> = readProjectsFromDatabase()
-        enterTimeEntries(numberOfDays, allUsers, allProjects, numberOfUsers)
-        return allUsers
+        enterTimeEntries(numberOfDays, allEmployees, allProjects, numberOfUsers)
+        return allEmployees
     }
 
-    private fun accumulateMinutesPerEachUser(allUsers: List<User>) {
+    private fun accumulateMinutesPerEachUser(allEmployees: List<Employee>) {
         val (timeToAccumulate) = getTime {
             val minutesPerUserTotal =
-                    allUsers.map { u -> pmd.getAllTimeEntriesForUser(u).sumBy { te -> te.time.numberOfMinutes } }
+                    allEmployees.map { u -> pmd.getAllTimeEntriesForUser(u).sumBy { te -> te.time.numberOfMinutes } }
                             .toList()
-            logInfo("the time ${allUsers[0]} spent was ${minutesPerUserTotal[0]}")
-            logInfo("the time ${allUsers[1]} spent was ${minutesPerUserTotal[1]}")
+            logInfo("the time ${allEmployees[0]} spent was ${minutesPerUserTotal[0]}")
+            logInfo("the time ${allEmployees[1]} spent was ${minutesPerUserTotal[1]}")
         }
 
         logInfo("It took $timeToAccumulate milliseconds to accumulate the minutes per user")
     }
 
-    private fun readTimeEntriesForOneUser(allUsers: List<User>) {
-        val (timeToGetAllTimeEntries) = getTime { pmd.getAllTimeEntriesForUser(allUsers[0]) }
+    private fun readTimeEntriesForOneUser(allEmployees: List<Employee>) {
+        val (timeToGetAllTimeEntries) = getTime { pmd.getAllTimeEntriesForUser(allEmployees[0]) }
         logInfo("It took $timeToGetAllTimeEntries milliseconds to get all the time entries for a user")
     }
 
-    private fun enterTimeEntries(numberOfDays: Int, allUsers: List<User>, allProjects: List<Project>, numberOfUsers: Int) {
+    private fun enterTimeEntries(numberOfDays: Int, allEmployees: List<Employee>, allProjects: List<Project>, numberOfUsers: Int) {
         val (timeToEnterAllTimeEntries) = getTime {
             for (day in 1..numberOfDays) {
-                for (user in allUsers) {
+                for (user in allEmployees) {
                     pmd.addTimeEntry(TimeEntryPreDatabase(user, allProjects.random(), Time(2 * 60), Date(18438 + day), Details("AAAAAAAAAAAA")))
                     pmd.addTimeEntry(TimeEntryPreDatabase(user, allProjects.random(), Time(2 * 60), Date(18438 + day), Details("AAAAAAAAAAAA")))
                     pmd.addTimeEntry(TimeEntryPreDatabase(user, allProjects.random(), Time(2 * 60), Date(18438 + day), Details("AAAAAAAAAAAA")))
@@ -183,7 +182,7 @@ class PureMemoryDatabaseTests {
     }
 
     private fun readProjectsFromDatabase(): List<Project> {
-        val (timeToReadAllProjects, allProjects) = getTime { pmd.getAllProjects().orEmpty() }
+        val (timeToReadAllProjects, allProjects) = getTime { pmd.getAllProjects()}
         logInfo("It took $timeToReadAllProjects milliseconds to read all the projects")
         return allProjects
     }
@@ -194,7 +193,7 @@ class PureMemoryDatabaseTests {
         logInfo("It took $timeToCreateProjects milliseconds to create $numberOfProjects projects")
     }
 
-    private fun readUsersFromDatabase(): List<User> {
+    private fun readUsersFromDatabase(): List<Employee> {
         val (timeToReadAllUsers, allUsers) = getTime {
             pmd.getAllUsers()
         }
@@ -205,7 +204,7 @@ class PureMemoryDatabaseTests {
     private fun persistUsersToDatabase(numberOfUsers: Int, lotsOfUsers: List<String>) {
         val (timeToEnterUsers) = getTime {
             for (i in 0..numberOfUsers) {
-                pmd.addNewUser(UserName(lotsOfUsers[i]))
+                pmd.addNewUser(EmployeeName(lotsOfUsers[i]))
             }
         }
         logInfo("It took $timeToEnterUsers milliseconds to enter $numberOfUsers users")

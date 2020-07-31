@@ -48,10 +48,10 @@ class EnteringTimeBDD {
 
     @Test
     fun `A user has already entered 24 hours for the day, they cannot enter more time on a new entry`() {
-        val (tru, newProject: Project, newUser : User) = `given the user has already entered 24 hours of time entries before`()
+        val (tru, newProject: Project, newEmployee: Employee) = `given the user has already entered 24 hours of time entries before`()
 
         // when they enter in a new time entry for one hour
-        val entry = createTimeEntryPreDatabase(time = Time(30), project = newProject, user = newUser)
+        val entry = createTimeEntryPreDatabase(time = Time(30), project = newProject, employee = newEmployee)
 
         // then the system disallows it
         assertThrows(ExceededDailyHoursAmountException::class.java) { tru.recordTime(entry) }
@@ -63,7 +63,7 @@ class EnteringTimeBDD {
         val startAfterDatabase = System.currentTimeMillis()
         val tru = createTimeRecordingUtility()
         val newProject : Project = tru.createProject(DEFAULT_PROJECT_NAME)
-        val newUser : User = tru.createUser(DEFAULT_USERNAME)
+        val newEmployee : Employee = tru.createUser(DEFAULT_EMPLOYEENAME)
 
         // when I enter in that time
         val numberOfSamples = 10
@@ -72,7 +72,7 @@ class EnteringTimeBDD {
         for (i in 1..numberOfSamples) {
             val (timeElapsed) = getTime {
                 val entry = createTimeEntryPreDatabase(
-                        user = newUser,
+                        employee = newEmployee,
                         time = Time(1),
                         project = newProject,
                         details = Details("Four score and seven years ago, blah blah blah")
@@ -99,17 +99,17 @@ class EnteringTimeBDD {
         val expectedStatus = RecordTimeResult(null, StatusEnum.SUCCESS)
         val tru = createTimeRecordingUtility()
         val newProject: Project = tru.createProject(ProjectName("A"))
-        val newUser: User = tru.createUser(UserName("B"))
-        val entry = createTimeEntryPreDatabase(project = newProject, user = newUser)
+        val newEmployee: Employee = tru.createUser(EmployeeName("B"))
+        val entry = createTimeEntryPreDatabase(project = newProject, employee = newEmployee)
         return Triple(expectedStatus, tru, entry)
     }
 
     private fun `given I have worked 6 hours on project "A" on Monday with a lot of notes`(): Triple<TimeRecordingUtilities, TimeEntryPreDatabase, RecordTimeResult> {
         val tru = createTimeRecordingUtility()
         val newProject: Project = tru.createProject(DEFAULT_PROJECT_NAME)
-        val newUser : User = tru.createUser(DEFAULT_USERNAME)
+        val newEmployee : Employee = tru.createUser(DEFAULT_EMPLOYEENAME)
         val entry = createTimeEntryPreDatabase(
-                user = newUser,
+                employee = newEmployee,
                 project = newProject,
                 time = Time(60 * 6),
                 details = Details("Four score and seven years ago, blah blah blah".repeat(10))
@@ -118,13 +118,13 @@ class EnteringTimeBDD {
         return Triple(tru, entry, expectedStatus)
     }
 
-    private fun `given the user has already entered 24 hours of time entries before`(): Triple<TimeRecordingUtilities, Project, User> {
+    private fun `given the user has already entered 24 hours of time entries before`(): Triple<TimeRecordingUtilities, Project, Employee> {
         val tru = createTimeRecordingUtility()
         val newProject: Project = tru.createProject(ProjectName("A"))
-        val newUser: User = tru.createUser(UserName("B"))
-        val existingTimeForTheDay = createTimeEntryPreDatabase(user = newUser, project = newProject, time = Time(60 * 24))
+        val newEmployee: Employee = tru.createUser(EmployeeName("B"))
+        val existingTimeForTheDay = createTimeEntryPreDatabase(employee = newEmployee, project = newProject, time = Time(60 * 24))
         tru.recordTime(existingTimeForTheDay)
-        return Triple(tru, newProject, newUser)
+        return Triple(tru, newProject, newEmployee)
     }
 
 

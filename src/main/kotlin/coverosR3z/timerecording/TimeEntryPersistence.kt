@@ -20,7 +20,7 @@ class TimeEntryPersistence(val pmd : PureMemoryDatabase) : ITimeEntryPersistence
      */
     private fun isEntryValid(entry: TimeEntryPreDatabase) {
         pmd.getProjectById(entry.project.id) ?: throw ProjectIntegrityViolationException()
-        pmd.getUserById(entry.user.id) ?: throw UserIntegrityViolationException()
+        pmd.getUserById(entry.employee.id) ?: throw UserIntegrityViolationException()
     }
 
     override fun persistNewProject(projectName: ProjectName): Project {
@@ -30,26 +30,26 @@ class TimeEntryPersistence(val pmd : PureMemoryDatabase) : ITimeEntryPersistence
         return Project(newId, projectName.value)
     }
 
-    override fun persistNewUser(username: UserName): User {
+    override fun persistNewUser(username: EmployeeName): Employee {
         logInfo("Recording a new user, ${username.value}, to the database")
 
         val newId = pmd.addNewUser(username)
 
         assert(newId > 0) {"A valid user will receive a positive id"}
-        return User(newId, username.value)
+        return Employee(newId, username.value)
     }
 
-    override fun queryMinutesRecorded(user: User, date: Date): Int {
-        val minutes = pmd.getMinutesRecordedOnDate(user, date)
+    override fun queryMinutesRecorded(employee: Employee, date: Date): Int {
+        val minutes = pmd.getMinutesRecordedOnDate(employee, date)
         return minutes
     }
 
-    override fun readTimeEntries(user: User): List<TimeEntry> {
-        return pmd.getAllTimeEntriesForUser(user)
+    override fun readTimeEntries(employee: Employee): List<TimeEntry> {
+        return pmd.getAllTimeEntriesForUser(employee)
     }
 
-    override fun readTimeEntriesOnDate(user: User, date: Date): List<TimeEntry> {
-        return pmd.getAllTimeEntriesForUserOnDate(user, date)
+    override fun readTimeEntriesOnDate(employee: Employee, date: Date): List<TimeEntry> {
+        return pmd.getAllTimeEntriesForUserOnDate(employee, date)
     }
 
 }
