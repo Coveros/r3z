@@ -5,7 +5,7 @@ import coverosR3z.persistence.PureMemoryDatabase
 
 class AuthenticationPersistence(val pmd : PureMemoryDatabase) : IAuthPersistence {
 
-    override fun createExecutor(name: String) {
+    override fun createUser(name: String) {
         TODO("Not yet implemented")
     }
 

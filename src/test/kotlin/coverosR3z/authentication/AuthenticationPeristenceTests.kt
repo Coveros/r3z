@@ -7,7 +7,7 @@ import org.junit.Test
 class AuthenticationPeristenceTests {
 
     @Test
-    fun `should be possible to see if a executor is registered`() {
+    fun `should be possible to see if a user is registered`() {
         val ap = AuthenticationPersistence(PureMemoryDatabase())
 
         val result = ap.isEmployeeRegistered("mitch")
